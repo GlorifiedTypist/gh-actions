@@ -1,0 +1,59 @@
+name: deploy
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  deploy:
+    environment: ${{ inputs.environment }}
+    runs-on: [ self-hosted, linux, external-k8s ]
+    container:
+      image: fawkes-docker-dev-images.artifactory.bayer.com/fawkes_runner:0.1
+      credentials:
+        username: ${{ vars.JFROG_REGISTRY_USER }}
+        password: ${{ secrets.JFROG_REGISTRY_PASSWORD }}
+    steps:
+      - name: Prepare
+        run: |
+          git config --global credential.helper 'store --file ~/.git-credentials'
+          git config --global url."https://token:${{ secrets.ORG_REPOS_INTERNAL_READ_ONLY }}@github.com/bayer-int".insteadOf https://github.com/bayer-int
+
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          service_account: ${{ vars.FAWKES_GOOGLE_SERVICE_ACCOUNT_ID }}
+          workload_identity_provider: ${{ vars.FAWKES_GOOGLE_WORKLOAD_IDP_ID }}
+
+      - name: Terraform Init
+        working-directory: configuration
+        run: |
+          terraform init \
+            -backend-config "bucket=${{ vars.FAWKES_GOOGLE_TF_BACKEND_NAME }}" \
+            -backend-config "prefix=terraform/state"
+
+      - name: Terraform Plan
+        working-directory: configuration
+        run: |
+          terraform plan \
+            -var "project_id=${{ vars.FAWKES_GOOGLE_PROJECT_ID }}"
+            # Note: please either append additional variable values here, or manually create and use a .tfvars file.
+            # Further information: https://developer.hashicorp.com/terraform/language/values/variables#variables-on-the-command-line
+            # Do the same for the apply step.
+
+      - name: Terraform Apply
+        working-directory: configuration
+        run: |
+          terraform apply \
+            -var "project_id=${{ vars.FAWKES_GOOGLE_PROJECT_ID }}" \
+            -auto-approve

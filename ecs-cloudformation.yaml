@@ -1,0 +1,77 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  KeyName:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the instance
+    Default: "newmac"
+
+Resources:
+  ECRRepository:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: ghecr
+
+  ECRAccessRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: ECRAccessRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: ECRRepositoryAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ecr:GetDownloadUrlForLayer
+                  - ecr:BatchGetImage
+                  - ecr:BatchCheckLayerAvailability
+                  - ecr:PutImage
+                  - ecr:InitiateLayerUpload
+                  - ecr:UploadLayerPart
+                  - ecr:CompleteLayerUpload
+                Resource: !Sub arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/ghecr
+
+  IAMInstanceProfile:
+     Type: AWS::IAM::InstanceProfile
+     Properties:
+       Roles:
+         - !Ref ECRAccessRole
+
+  MySecurityGroup:
+     Type: AWS::EC2::SecurityGroup
+     Properties:
+       GroupDescription: Allow SSH and HTTP
+       SecurityGroupIngress:
+         - IpProtocol: tcp
+           FromPort: 22
+           ToPort: 22
+           CidrIp: 0.0.0.0/0
+
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      KeyName: !Ref KeyName
+      ImageId: ami-080e1f13689e07408
+      # SubnetId: subnet-04643504208e3796e
+      SecurityGroupIds: 
+        - !Ref MySecurityGroup
+      IamInstanceProfile: !Ref IAMInstanceProfile
+      UserData:
+        Fn::Base64: |
+          #!/bin/bash
+          echo "Installing GitHub Actions runner..."
+          cd /home/ec2-user
+          mkdir actions-runner
+          cd actions-runner
+          curl -O -L https://github.com/actions/runner/releases/download/v2.277.1/actions-runner-linux-x64-2.277.1.tar.gz
+          tar xzf ./actions-runner-linux-x64-2.277.1.tar.gz
+          ./config.sh --url https://github.com/your-org/your-repo --token ADBQLFLDAY4C3S24MMS7MUTGCPJR2
+          ./run.sh
