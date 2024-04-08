@@ -4,9 +4,9 @@ run-name: Deploying Fargate Resources
 on:
   workflow_call:
     inputs:
-      environment:
-        required: true
-        type: string
+      # environment:
+      #   required: true
+      #   type: string
 
 permissions:
   id-token: write
