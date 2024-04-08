@@ -22,6 +22,12 @@ Resources:
             Principal:
               Service: ecs-tasks.amazonaws.com
             Action: sts:AssumeRole
+          - Effect: Allow
+            Principal:
+              Service:
+              - ec2.amazonaws.com
+            Action:
+            - sts:AssumeRole
       Policies:
         - PolicyName: ECRRepositoryAccess
           PolicyDocument:
@@ -29,14 +35,37 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
-                  - ecr:GetDownloadUrlForLayer
+                  - ecr:*
                   - ecr:BatchGetImage
                   - ecr:BatchCheckLayerAvailability
                   - ecr:PutImage
                   - ecr:InitiateLayerUpload
                   - ecr:UploadLayerPart
                   - ecr:CompleteLayerUpload
+                  - sts:GetCallerIdentity
                 Resource: !Sub arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/ghecr
+        - PolicyName: ProfileGenenral
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - sts:*
+                Resource: "*"
+
+  ECRInstanceProfilePolicy:
+   Type: AWS::IAM::Policy
+   Properties:
+     PolicyName: ECRInstanceProfilePolicy
+     Roles:
+       - !Ref ECRAccessRole
+     PolicyDocument:
+       Version: '2012-10-17'
+       Statement:
+         - Effect: Allow
+           Action:
+             - sts:AssumeRole
+           Resource: !GetAtt [ ECRAccessRole, Arn ]
 
   IAMInstanceProfile:
      Type: AWS::IAM::InstanceProfile
