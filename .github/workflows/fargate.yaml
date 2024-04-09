@@ -61,7 +61,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          tags: ${{ inputs.ECR_REGISTRY }}/${{ inputs.ECR_REPOSITORY }}:latest
 
       # - name: Build, tag, and push image to Amazon
       #   id: build-image
