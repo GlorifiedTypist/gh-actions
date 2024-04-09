@@ -60,6 +60,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
+          context: ${{ inputs.TASK }}
           push: true
           tags: ${{ inputs.ECR_REGISTRY }}/${{ inputs.ECR_REPOSITORY }}:latest
 
