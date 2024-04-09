@@ -38,10 +38,11 @@ jobs:
         with:
           dir_names: "true"
           files: docker/**
-      - id: docker-maxrix
-        run: echo "${{ steps.docker-changed-dirs.outputs.all_changed_files }}" | sed 's/ /", "/g' | sed 's/^/value=\["/' | sed 's/$/"]/' >> $GITHUB_OUTPUT
+      - id: dockermaxrix
+        run: |
+          echo "${{ steps.docker-changed-dirs.outputs.all_changed_files }}" | sed 's/ /", "/g' | sed 's/^/value=\["/' | sed 's/$/"]/' >> $GITHUB_OUTPUT
       - run: |
-          echo "${{ steps.docker-matrix.outputs.value }}"
+          echo "${{ steps.dockermatrix.outputs.value }}"
 
     # secret-scanning:
     #     name: Secret Scan
