@@ -27,6 +27,10 @@ jobs:
       docker-matrix: ${{ steps.docker-matrix.outputs.value }}
 
     steps:
+      - run: |
+          env
+          echo "${{ github.sha }}"
+
       - uses: actions/checkout@v4
 
       - uses: dorny/paths-filter@v3
