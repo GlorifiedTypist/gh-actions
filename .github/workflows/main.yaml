@@ -42,8 +42,6 @@ jobs:
       - id: docker-matrix
         run: |
           echo "${{ steps.docker-changed-dirs.outputs.all_changed_files }}" | sed 's/ /", "/g' | sed 's/^/value=\["/' | sed 's/$/"]/' >> $GITHUB_OUTPUT
-      - run: |
-          echo "${{ steps.docker-matrix.outputs.value }}"
 
     # secret-scanning:
     #     name: Secret Scan
@@ -61,7 +59,7 @@ jobs:
     secrets: inherit
     strategy:
       matrix:
-        value: ${{fromJSON(needs.changes.outputs.docker-matrix)}}
+        task: ${{fromJSON(needs.changes.outputs.docker-matrix)}}
     with:
         ECR_REGISTRY: ghecr
         ECR_REPOSITORY: test

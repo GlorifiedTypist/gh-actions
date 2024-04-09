@@ -32,6 +32,7 @@ jobs:
   deploy:
     runs-on: self-hosted
     steps:
+      - run: echo ${{ matrix.task }}
       - name: Checkout the repository
         uses: actions/checkout@v3
 
