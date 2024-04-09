@@ -35,7 +35,7 @@ jobs:
   deploy:
     runs-on: self-hosted
     steps:
-      - run: echo ${{ inupt.TASK }}
+      - run: echo ${{ input.TASK }}
       - name: Checkout the repository
         uses: actions/checkout@v3
 
