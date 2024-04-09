@@ -18,6 +18,21 @@ concurrency:
     cancel-in-progress: false
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      docker: ${{ steps.filter.outputs.docker }}
+
+    steps:
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            docker:
+              - 'docker/**'
+
     # secret-scanning:
     #     name: Secret Scan
     #     uses: bayer-int/actions-workflows/.github/workflows/secret-scanning.yml@main
@@ -26,15 +41,16 @@ jobs:
     #     name: Linting
     #     uses: ./.github/workflows/linting.yaml
 
-    deploy:
-        # if: ${{ github.ref == 'refs/heads/dev' }}
-        uses: ./.github/workflows/fargate.yaml
-        # needs: [linting]
-        secrets: inherit
-        with:
-            ECR_REGISTRY: ghecr
-            ECR_REPOSITORY: test
-            ACCOUNT_ID: 525524992861
+  deploy:
+    # if: ${{ github.ref == 'refs/heads/dev' }}
+    if: ${{ needs.changes.outputs.docker == 'true' }}
+    needs: changes
+    uses: ./.github/workflows/fargate.yaml
+    secrets: inherit
+    with:
+        ECR_REGISTRY: ghecr
+        ECR_REPOSITORY: test
+        ACCOUNT_ID: 525524992861
 
     # validate:
     #     if: ${{ github.ref != 'refs/heads/main' }}

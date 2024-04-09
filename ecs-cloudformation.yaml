@@ -43,7 +43,7 @@ Resources:
                   - ecr:UploadLayerPart
                   - ecr:CompleteLayerUpload
                   - sts:GetCallerIdentity
-                Resource: !Sub arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/ghecr
+                Resource: "*"
         - PolicyName: ProfileGenenral
           PolicyDocument:
             Version: '2012-10-17'
@@ -88,7 +88,7 @@ Resources:
     Properties:
       InstanceType: t2.micro
       KeyName: !Ref KeyName
-      ImageId: ami-080e1f13689e07408
+      ImageId: ami-051f8a213df8bc089
       # SubnetId: subnet-04643504208e3796e
       SecurityGroupIds: 
         - !Ref MySecurityGroup
@@ -100,7 +100,5 @@ Resources:
           cd /home/ec2-user
           mkdir actions-runner
           cd actions-runner
-          curl -O -L https://github.com/actions/runner/releases/download/v2.277.1/actions-runner-linux-x64-2.277.1.tar.gz
-          tar xzf ./actions-runner-linux-x64-2.277.1.tar.gz
-          ./config.sh --url https://github.com/your-org/your-repo --token ADBQLFLDAY4C3S24MMS7MUTGCPJR2
-          ./run.sh
+          curl -o actions-runner-linux-x64-2.315.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.315.0/actions-runner-linux-x64-2.315.0.tar.gz
+          tar xzf ./actions-runner-linux-x64-2.315.0.tar.gz
