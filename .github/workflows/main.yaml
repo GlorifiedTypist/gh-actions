@@ -31,7 +31,7 @@ jobs:
 
     steps:
       - run: |
-          echo "Environment name: ${{ job.environment.name }}" 
+          echo "Environment name: ${{ github.job.properties.environment }}"
 
       - uses: actions/checkout@v4
 
