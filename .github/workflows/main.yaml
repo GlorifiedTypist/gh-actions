@@ -28,20 +28,22 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
       - uses: dorny/paths-filter@v3
         id: filter
         with:
           filters: |
             docker:
               - 'docker/**'
+
       - uses: tj-actions/changed-files@v35
         id: docker-changed-dirs
         with:
           dir_names: "true"
           files: docker/**
+
       - id: docker-matrix
         run: |
-          echo "${{ steps.docker-changed-dirs.outputs.all_changed_files }}"
           echo "${{ steps.docker-changed-dirs.outputs.all_changed_files }}" | sed 's/docker\///g' | sed 's/ /", "/g' | sed 's/.*/value=["&"]/' >> $GITHUB_OUTPUT
 
     # secret-scanning:
