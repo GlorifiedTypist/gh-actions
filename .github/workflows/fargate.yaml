@@ -98,7 +98,7 @@ jobs:
         with:
           task-definition: task-definition.json
           container-name: ${{ steps.deploymet_info.outputs._2 }}-container
-          image: ${{ steps.build-image.outputs.image }}
+          image: ${{ inputs.ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/${{ steps.deploymet_info.outputs._2 }}:latest
 
       - name: Deploy AWS ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
