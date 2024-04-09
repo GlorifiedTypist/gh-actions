@@ -24,6 +24,7 @@ jobs:
       pull-requests: read
     outputs:
       docker: ${{ steps.filter.outputs.docker }}
+      matrix: ${{ steps.docker-matrix.outputs.value }}
 
     steps:
       - uses: actions/checkout@v4
@@ -38,7 +39,7 @@ jobs:
         with:
           dir_names: "true"
           files: docker/**
-      - id: dockermaxrix
+      - id: docker-maxrix
         run: |
           echo "${{ steps.docker-changed-dirs.outputs.all_changed_files }}" | sed 's/ /", "/g' | sed 's/^/value=\["/' | sed 's/$/"]/' >> $GITHUB_OUTPUT
       - run: |
