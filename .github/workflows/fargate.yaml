@@ -61,9 +61,9 @@ jobs:
           dir_names: "true"
           files: docker/**
 
-      # - name: Download task definition
-      #   run: |
-      #       aws ecs describe-task-definition --task-definition ${{ inputs.TASK }} --query taskDefinition > task-definition.json
+      - name: Download task definition
+        run: |
+            aws ecs describe-task-definition --task-definition ${{ steps.deploymet_info.outputs._2 }} --query taskDefinition > task-definition.json
 
       - run: |
           pwd
