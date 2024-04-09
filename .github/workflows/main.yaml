@@ -54,6 +54,12 @@ jobs:
     #     name: Linting
     #     uses: ./.github/workflows/linting.yaml
 
+  dummy:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "hello"
+
   deploy:
     # if: ${{ github.ref == 'refs/heads/dev' }}
     if: ${{ needs.changes.outputs.docker == 'true' }}
