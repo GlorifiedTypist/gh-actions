@@ -61,7 +61,7 @@ jobs:
     secrets: inherit
     strategy:
       matrix:
-        value: ${{fromJSON(needs.setup.outputs.docker-matrix)}}
+        value: ${{fromJSON(needs.changes.outputs.docker-matrix)}}
     with:
         ECR_REGISTRY: ghecr
         ECR_REPOSITORY: test
