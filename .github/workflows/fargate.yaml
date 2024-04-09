@@ -67,8 +67,6 @@ jobs:
           cat task-definition.json
           for dir in ${{ steps.changed-dirs.outputs.all_changed_files }}; do
             cd $dir
-            ls 
-            pwd
             docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
             docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
             echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
@@ -80,7 +78,7 @@ jobs:
       #   uses: aws-actions/amazon-ecs-render-task-definition@v1
       #   with:
       #     task-definition: task-definition.json
-      #     container-name: nodejs-app-container
+      #     container-name: fargate-container
       #     image: ${{ steps.build-image.outputs.image }}
 
       # - name: Deploy AWS ECS task definition
