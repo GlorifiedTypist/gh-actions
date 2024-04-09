@@ -134,7 +134,7 @@ Resources:
       TaskRoleArn: !GetAtt [ECRAccessRole, Arn]
       ContainerDefinitions:
         - Name: hello-container
-          Image: !Ref ECRRepository
+          Image: !Sub "${AWS::AccountId}.dkr.ecr.us-east-1.amazonaws.com/hello:latest"
           Essential: true
           PortMappings:
             - ContainerPort: 80
@@ -165,7 +165,7 @@ Resources:
       TaskRoleArn: !GetAtt [ECRAccessRole, Arn]
       ContainerDefinitions:
         - Name: test-container
-          Image: !Ref ECRRepositoryTest
+          Image: !Sub "${AWS::AccountId}.dkr.ecr.us-east-1.amazonaws.com/test:latest"
           Essential: true
           PortMappings:
             - ContainerPort: 80

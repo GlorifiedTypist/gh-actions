@@ -31,9 +31,9 @@ jobs:
   deploy:
     runs-on: self-hosted
     steps:
-      - run: echo ${{ inputs.TASK }}
-      - name: Checkout the repository
-        uses: actions/checkout@v3
+      # - run: echo ${{ inputs.TASK }}
+      # - name: Checkout the repository
+      #   uses: actions/checkout@v3
 
       # - name: Configure AWS Credentials
       #   uses: aws-actions/configure-aws-credentials@v1
