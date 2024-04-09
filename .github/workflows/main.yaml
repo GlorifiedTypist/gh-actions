@@ -41,7 +41,7 @@ jobs:
           files: docker/**
       - id: docker-matrix
         run: |
-          echo "${{ steps.docker-changed-dirs.outputs.all_changed_files }}" echo "docker/py_hello docker/test" | sed 's/docker\///g' | sed 's/ /", "/g' | sed 's/.*/value=["&"]/' >> $GITHUB_OUTPUT
+          echo "${{ steps.docker-changed-dirs.outputs.all_changed_files }}" | sed 's/docker\///g' | sed 's/ /", "/g' | sed 's/.*/value=["&"]/' >> $GITHUB_OUTPUT
 
     # secret-scanning:
     #     name: Secret Scan
