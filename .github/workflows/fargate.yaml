@@ -104,5 +104,6 @@ jobs:
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: ${{ steps.deploymet_info.outputs._0 }}
+          #service: ${{ steps.deploymet_info.outputs._0 }} CHECK THIS
+          service: fargate-service
           cluster: ${{ inputs.CLUSTER_NAME }}
