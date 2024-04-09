@@ -31,6 +31,7 @@ jobs:
 
     steps:
       - run: |
+          env
           echo "Environment name: $env"
 
       - uses: actions/checkout@v4
