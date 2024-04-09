@@ -45,9 +45,7 @@ jobs:
         uses: tj-actions/changed-files@v35
         with:
           dir_names: "true"
-          files_yaml: |
-            docker:
-              - docker/**
+          files: docker/**
 
       # - name: Download task definition
       #   run: |
