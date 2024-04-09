@@ -66,6 +66,7 @@ jobs:
         ACCOUNT_ID: 525524992861
         CLUSTER_NAME: ghecr-ECSFargateCluster-sxZTXRYhd4Z0
         TASK_DEFINITION: fargate-task
+        TASK: ${{ matrix.task }}
 
     # validate:
     #     if: ${{ github.ref != 'refs/heads/main' }}

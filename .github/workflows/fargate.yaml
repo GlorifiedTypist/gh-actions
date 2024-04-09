@@ -19,6 +19,9 @@ on:
       TASK_DEFINITION:
         required: true
         type: string
+      TASK:
+        required: true
+        type: string
 
       # environment:
       #   required: true
@@ -32,7 +35,7 @@ jobs:
   deploy:
     runs-on: self-hosted
     steps:
-      - run: echo ${{ matrix.task }}
+      - run: echo ${{ inupt.TASK }}
       - name: Checkout the repository
         uses: actions/checkout@v3
 
