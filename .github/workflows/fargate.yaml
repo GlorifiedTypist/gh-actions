@@ -60,9 +60,11 @@ jobs:
           ECR_REPOSITORY: nodejs-app
           IMAGE_TAG: latest
         run: |
-          echo ${{ steps.changed-dirs.outputs.all_changed_files }}
+          echo ${{ steps.changed-dirs.outputs.docker_all_changed_files }}
           for dir in ${{ steps.changed-dirs.outputs.all_changed_files }}; do
             cd $dir
+            ls 
+            pwd
             docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
             docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
             echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
