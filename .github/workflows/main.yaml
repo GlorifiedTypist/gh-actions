@@ -74,7 +74,7 @@ jobs:
         ECR_REGISTRY: ghecr
         ECR_REPOSITORY: test
         ACCOUNT_ID: 525524992861
-        CLUSTER_NAME: ghecr-ECSFargateCluster-sxZTXRYhd4Z0
+        CLUSTER_NAME: ghecr-ECSFargateCluster-hcCeInCKWmcR
         TASK_DEFINITION: fargate-task
         TASK: ${{ matrix.task }}
 

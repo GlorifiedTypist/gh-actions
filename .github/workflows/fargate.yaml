@@ -92,17 +92,17 @@ jobs:
       #       cd ..
       #     done
 
-      # - name: Fill in the new image ID in the AWS ECS task definition
-      #   id: task-def
-      #   uses: aws-actions/amazon-ecs-render-task-definition@v1
-      #   with:
-      #     task-definition: task-definition.json
-      #     container-name: fargate-container
-      #     image: ${{ steps.build-image.outputs.image }}
+      - name: Fill in the new image ID in the AWS ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-definition.json
+          container-name: ${{ steps.deploymet_info.outputs._2 }}-container
+          image: ${{ steps.build-image.outputs.image }}
 
-      # - name: Deploy AWS ECS task definition
-      #   uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-      #   with:
-      #     task-definition: ${{ steps.task-def.outputs.task-definition }}
-      #     service: fargate-node-service
-      #     cluster: fargate-node-cluster
+      - name: Deploy AWS ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ steps.deploymet_info.outputs._0 }}
+          cluster: ${{ inputs.CLUSTER_NAME }}
