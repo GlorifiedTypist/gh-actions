@@ -39,7 +39,7 @@ jobs:
           dir_names: "true"
           files: docker/**
       - id: docker-maxrix
-        run: echo "value=${{ steps.docker-changed-dirs.outputs.all_changed_files }}" | sed 's/ /", "/g' | sed 's/^/value=\["/' | sed 's/$/"]/' >> $GITHUB_OUTPUT
+        run: echo "${{ steps.docker-changed-dirs.outputs.all_changed_files }}" | sed 's/ /", "/g' | sed 's/^/value=\["/' | sed 's/$/"]/' >> $GITHUB_OUTPUT
       - run: |
           echo "${{ steps.docker-matrix.outputs.value }}"
 
