@@ -42,6 +42,14 @@ jobs:
       #     role-to-assume: arn:aws:iam::${{ inputs.ACCOUNT_ID }}:role/ECRAccessRole
       #     aws-region: us-east-1
 
+      # otel-metric-aggregation/src/test
+      # 0: otel-metric-aggregation, 1: src, 2: test
+      - uses: jungwinter/split@master
+        id: deploymet_info
+        with:
+          msg: ${{ inputs.TASK }}
+          separator: "/"
+
       - name: Login to AWS ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
@@ -62,7 +70,7 @@ jobs:
         with:
           context: ./docker/${{ inputs.TASK }}
           push: true
-          tags: ${{ inputs.ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/${{ inputs.TASK }}:latest
+          tags: ${{ inputs.ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/${{ steps.deploymet_info.outputs._2 }}:latest
 
       # - name: Build, tag, and push image to Amazon
       #   id: build-image
