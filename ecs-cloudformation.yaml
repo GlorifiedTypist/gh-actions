@@ -9,7 +9,12 @@ Resources:
   ECRRepository:
     Type: AWS::ECR::Repository
     Properties:
-      RepositoryName: ghecr
+      RepositoryName: hello
+
+  ECRRepositoryTest:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: test
 
   ECRAccessRole:
     Type: AWS::IAM::Role
@@ -44,6 +49,8 @@ Resources:
                   - ecr:UploadLayerPart
                   - ecr:CompleteLayerUpload
                   - sts:GetCallerIdentity
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
                 Resource: "*"
         - PolicyName: ProfileGenenral
           PolicyDocument:
@@ -115,29 +122,67 @@ Resources:
     Type: AWS::ECS::Cluster
 
   ECSFargateTaskDefinition:
-     Type: AWS::ECS::TaskDefinition
-     Properties:
-       Family: fargate-task
-       Cpu: '256'
-       Memory: '512'
-       NetworkMode: awsvpc
-       RequiresCompatibilities:
-         - FARGATE
-       ExecutionRoleArn: !GetAtt [ECRAccessRole, Arn]
-       TaskRoleArn: !GetAtt [ECRAccessRole, Arn]
-       ContainerDefinitions:
-         - Name: fargate-container
-           Image: !Ref ECRRepository
-           Essential: true
-           PortMappings:
-             - ContainerPort: 80
-           HealthCheck:
-             Command:
-               - CMD-SHELL
-               - "curl -f http://localhost/ || exit 1"
-             Interval: 30
-             Timeout: 5
-             Retries: 3
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: hello
+      Cpu: '256'
+      Memory: '512'
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
+      ExecutionRoleArn: !GetAtt [ECRAccessRole, Arn]
+      TaskRoleArn: !GetAtt [ECRAccessRole, Arn]
+      ContainerDefinitions:
+        - Name: hello-container
+          Image: !Ref ECRRepository
+          Essential: true
+          PortMappings:
+            - ContainerPort: 80
+          HealthCheck:
+            Command:
+              - CMD-SHELL
+              - "curl -f http://localhost/ || exit 1"
+            Interval: 30
+            Timeout: 5
+            Retries: 3
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: "/ecs/fargate-hello"
+              awslogs-region: "us-east-1"
+              awslogs-stream-prefix: "fargate-container"
+          
+  ECSFargateTaskDefinitionTest:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: test
+      Cpu: '256'
+      Memory: '512'
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
+      ExecutionRoleArn: !GetAtt [ECRAccessRole, Arn]
+      TaskRoleArn: !GetAtt [ECRAccessRole, Arn]
+      ContainerDefinitions:
+        - Name: test-container
+          Image: !Ref ECRRepositoryTest
+          Essential: true
+          PortMappings:
+            - ContainerPort: 80
+          HealthCheck:
+            Command:
+              - CMD-SHELL
+              - "curl -f http://localhost/ || exit 1"
+            Interval: 30
+            Timeout: 5
+            Retries: 3
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: "/ecs/fargate-test"
+              awslogs-region: "us-east-1"
+              awslogs-stream-prefix: "fargate-container"
+  
 
   ECSFargateService:
     Type: AWS::ECS::Service
