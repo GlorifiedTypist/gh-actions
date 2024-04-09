@@ -10,6 +10,8 @@ COPY requirements.txt .
 # Install any needed dependencies specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
+RUN apt-get update; apt-get install curl -y
+
 # Copy the Flask application code into the container
 COPY app.py .
 

@@ -115,26 +115,34 @@ Resources:
     Type: AWS::ECS::Cluster
 
   ECSFargateTaskDefinition:
-    Type: AWS::ECS::TaskDefinition
-    Properties:
-      Family: fargate-task
-      Cpu: '256'
-      Memory: '512'
-      NetworkMode: awsvpc
-      RequiresCompatibilities:
-        - FARGATE
-      ExecutionRoleArn: !GetAtt [ECRAccessRole, Arn]
-      TaskRoleArn: !GetAtt [ECRAccessRole, Arn]
-      ContainerDefinitions:
-        - Name: fargate-container
-          Image: !Ref ECRRepository
-          Essential: true
-          PortMappings:
-            - ContainerPort: 80
+     Type: AWS::ECS::TaskDefinition
+     Properties:
+       Family: fargate-task
+       Cpu: '256'
+       Memory: '512'
+       NetworkMode: awsvpc
+       RequiresCompatibilities:
+         - FARGATE
+       ExecutionRoleArn: !GetAtt [ECRAccessRole, Arn]
+       TaskRoleArn: !GetAtt [ECRAccessRole, Arn]
+       ContainerDefinitions:
+         - Name: fargate-container
+           Image: !Ref ECRRepository
+           Essential: true
+           PortMappings:
+             - ContainerPort: 80
+           HealthCheck:
+             Command:
+               - CMD-SHELL
+               - "curl -f http://localhost/ || exit 1"
+             Interval: 30
+             Timeout: 5
+             Retries: 3
 
   ECSFargateService:
     Type: AWS::ECS::Service
     Properties:
+      ServiceName: fargate-service
       Cluster: !Ref ECSFargateCluster
       DesiredCount: 1
       TaskDefinition: !Ref ECSFargateTaskDefinition

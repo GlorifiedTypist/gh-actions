@@ -33,6 +33,13 @@ jobs:
           filters: |
             docker:
               - 'docker/**'
+      - uses: tj-actions/changed-files@v35
+        id: docker-changed-dirs
+        with:
+          dir_names: "true"
+          files: docker/**
+      - id: docker-maxrix
+        run: echo "${{ steps.changed-dirs.outputs.all_changed_files }}"
 
     # secret-scanning:
     #     name: Secret Scan
