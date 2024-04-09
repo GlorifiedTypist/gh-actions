@@ -74,7 +74,7 @@ jobs:
         with:
           context: ./docker/${{ inputs.TASK }}
           push: true
-          tags: ${{ inputs.ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/${{ steps.deploymet_info.outputs._2 }}:${{ github.sha }}"
+          tags: ${{ inputs.ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/${{ steps.deploymet_info.outputs._2 }}:${{ github.sha }}
 
       # - name: Build, tag, and push image to Amazon
       #   id: build-image
