@@ -53,16 +53,16 @@ jobs:
           dir_names: "true"
           files: docker/**
 
-      - name: Download task definition
-        run: |
-            aws ecs describe-task-definition --task-definition ${{ inputs.TASK }} --query taskDefinition > task-definition.json
+      # - name: Download task definition
+      #   run: |
+      #       aws ecs describe-task-definition --task-definition ${{ inputs.TASK }} --query taskDefinition > task-definition.json
 
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
           context: ./docker/${{ inputs.TASK }}
           push: true
-          tags: ${{ inputs.ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/${{ inputs.ECR_REGISTRY }}/${{ inputs.TASK }}:latest
+          tags: ${{ inputs.ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/${{ inputs.TASK }}:latest
 
       # - name: Build, tag, and push image to Amazon
       #   id: build-image
