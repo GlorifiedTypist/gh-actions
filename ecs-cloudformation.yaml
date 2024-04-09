@@ -54,34 +54,97 @@ Resources:
                 Resource: "*"
 
   ECRInstanceProfilePolicy:
-   Type: AWS::IAM::Policy
-   Properties:
-     PolicyName: ECRInstanceProfilePolicy
-     Roles:
-       - !Ref ECRAccessRole
-     PolicyDocument:
-       Version: '2012-10-17'
-       Statement:
-         - Effect: Allow
-           Action:
-             - sts:AssumeRole
-           Resource: !GetAtt [ ECRAccessRole, Arn ]
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: ECRInstanceProfilePolicy
+      Roles:
+        - !Ref ECRAccessRole
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - sts:AssumeRole
+            Resource: !GetAtt [ ECRAccessRole, Arn ]
 
   IAMInstanceProfile:
-     Type: AWS::IAM::InstanceProfile
-     Properties:
-       Roles:
-         - !Ref ECRAccessRole
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles:
+        - !Ref ECRAccessRole
 
   MySecurityGroup:
-     Type: AWS::EC2::SecurityGroup
-     Properties:
-       GroupDescription: Allow SSH and HTTP
-       SecurityGroupIngress:
-         - IpProtocol: tcp
-           FromPort: 22
-           ToPort: 22
-           CidrIp: 0.0.0.0/0
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow SSH and HTTP
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+
+  ECSServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ecs.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: ECSServicePolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ecs:*
+                  - ec2:*
+                Resource: "*"
+      RoleName: ECSServiceRole
+
+  ECSFargateCluster:
+    Type: AWS::ECS::Cluster
+
+  ECSFargateTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: fargate-task
+      Cpu: '256'
+      Memory: '512'
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
+      ExecutionRoleArn: !GetAtt [ECRAccessRole, Arn]
+      TaskRoleArn: !GetAtt [ECRAccessRole, Arn]
+      ContainerDefinitions:
+        - Name: fargate-container
+          Image: !Ref ECRRepository
+          Essential: true
+          PortMappings:
+            - ContainerPort: 80
+
+  ECSFargateService:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref ECSFargateCluster
+      DesiredCount: 1
+      TaskDefinition: !Ref ECSFargateTaskDefinition
+      LaunchType: FARGATE
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          Subnets:
+            - subnet-0b820800dc91bc3bb
+            - subnet-035c4225583b90e37
+          SecurityGroups:
+            - !GetAtt [MySecurityGroup, GroupId]
 
   EC2Instance:
     Type: AWS::EC2::Instance
@@ -90,7 +153,7 @@ Resources:
       KeyName: !Ref KeyName
       ImageId: ami-051f8a213df8bc089
       # SubnetId: subnet-04643504208e3796e
-      SecurityGroupIds: 
+      SecurityGroupIds:
         - !Ref MySecurityGroup
       IamInstanceProfile: !Ref IAMInstanceProfile
       UserData:

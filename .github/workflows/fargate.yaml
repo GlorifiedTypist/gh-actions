@@ -13,6 +13,12 @@ on:
       ACCOUNT_ID:
         required: true
         type: string
+      CLUSTER_NAME:
+        required: true
+        type: string
+      TASK_DEFINITION:
+        required: true
+        type: string
 
       # environment:
       #   required: true
@@ -47,9 +53,9 @@ jobs:
           dir_names: "true"
           files: docker/**
 
-      # - name: Download task definition
-      #   run: |
-      #       aws ecs describe-task-definition --task-definition otelmetricaggregation --query taskDefinition > task-definition.json
+      - name: Download task definition
+        run: |
+            aws ecs describe-task-definition --task-definition ${{ inputs.TASK_DEFINITION }} --query taskDefinition > task-definition.json
 
       - name: Build, tag, and push image to Amazon
         id: build-image
@@ -58,7 +64,7 @@ jobs:
           ECR_REPOSITORY: ${{ inputs.ECR_REGISTRY }}
           IMAGE_TAG: latest
         run: |
-          echo ${{ steps.changed-dirs.outputs.docker_all_changed_files }}
+          cat task-definition.json
           for dir in ${{ steps.changed-dirs.outputs.all_changed_files }}; do
             cd $dir
             ls 
