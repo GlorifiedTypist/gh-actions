@@ -24,7 +24,7 @@ jobs:
       pull-requests: read
     outputs:
       docker: ${{ steps.filter.outputs.docker }}
-      matrix: ${{ steps.dockermatrix.outputs.value }}
+      matrix: ${{ steps.docker-matrix.outputs.value }}
 
     steps:
       - uses: actions/checkout@v4
@@ -39,11 +39,11 @@ jobs:
         with:
           dir_names: "true"
           files: docker/**
-      - id: dockermatrix
+      - id: docker-matrix
         run: |
           echo "${{ steps.docker-changed-dirs.outputs.all_changed_files }}" | sed 's/ /", "/g' | sed 's/^/value=\["/' | sed 's/$/"]/' >> $GITHUB_OUTPUT
       - run: |
-          echo "${{ steps.dockermatrix.outputs.value }}"
+          echo "${{ steps.docker-matrix.outputs.value }}"
 
     # secret-scanning:
     #     name: Secret Scan
