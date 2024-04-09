@@ -68,7 +68,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
-          context: ./docker/${{ inputs.TASK }}
+          context: ./docker/${{ inputs.TASK }}/
           push: true
           tags: ${{ inputs.ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/${{ steps.deploymet_info.outputs._2 }}:latest
 
