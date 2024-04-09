@@ -26,10 +26,12 @@ jobs:
       docker: ${{ steps.filter.outputs.docker }}
       docker-matrix: ${{ steps.docker-matrix.outputs.value }}
 
+    environment:
+     name: dev
+
     steps:
       - run: |
-          env
-          echo "${{ github.sha }}"
+          echo "Environment name: ${{ job.environment.name }}" 
 
       - uses: actions/checkout@v4
 
