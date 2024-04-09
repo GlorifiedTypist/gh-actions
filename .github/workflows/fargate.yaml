@@ -60,9 +60,9 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
-          context: ${{ inputs.TASK }}
+          context: ./docker/${{ inputs.TASK }}
           push: true
-          tags: ${{ inputs.ECR_REGISTRY }}/${{ inputs.ECR_REPOSITORY }}:latest
+          tags: ${{ inputs.ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/${{ inputs.ECR_REGISTRY }}/${{ inputs.TASK }}:latest
 
       # - name: Build, tag, and push image to Amazon
       #   id: build-image
