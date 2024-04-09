@@ -36,6 +36,7 @@ Resources:
               - Effect: Allow
                 Action:
                   - ecr:*
+                  - ecs:*
                   - ecr:BatchGetImage
                   - ecr:BatchCheckLayerAvailability
                   - ecr:PutImage
