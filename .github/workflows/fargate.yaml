@@ -23,10 +23,6 @@ on:
         required: true
         type: string
 
-      # environment:
-      #   required: true
-      #   type: string
-
 permissions:
   id-token: write
   contents: read
@@ -57,25 +53,31 @@ jobs:
           dir_names: "true"
           files: docker/**
 
-      - name: Download task definition
-        run: |
-            aws ecs describe-task-definition --task-definition ${{ inputs.TASK_DEFINITION }} --query taskDefinition > task-definition.json
+      # - name: Download task definition
+      #   run: |
+      #       aws ecs describe-task-definition --task-definition ${{ inputs.TASK_DEFINITION }} --query taskDefinition > task-definition.json
 
-      - name: Build, tag, and push image to Amazon
-        id: build-image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: ${{ inputs.ECR_REGISTRY }}
-          IMAGE_TAG: latest
-        run: |
-          cat task-definition.json
-          for dir in ${{ steps.changed-dirs.outputs.all_changed_files }}; do
-            cd $dir
-            docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-            docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-            echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-            cd ..
-          done
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: $ECR_REGISTRY/$ECR_REPOSITORY:latest
+
+      # - name: Build, tag, and push image to Amazon
+      #   id: build-image
+      #   env:
+      #     ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+      #     ECR_REPOSITORY: ${{ inputs.ECR_REGISTRY }}
+      #     IMAGE_TAG: latest
+      #   run: |
+      #     cat task-definition.json
+      #     for dir in ${{ steps.changed-dirs.outputs.all_changed_files }}; do
+      #       cd $dir
+      #       docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+      #       docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+      #       echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+      #       cd ..
+      #     done
 
       # - name: Fill in the new image ID in the AWS ECS task definition
       #   id: task-def
