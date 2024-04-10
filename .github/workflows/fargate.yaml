@@ -42,6 +42,8 @@ jobs:
           # role-to-assume: arn:aws:iam::${{ inputs.ACCOUNT_ID }}:role/ECRAccessRole
           aws-region: us-east-1
 
+      - run: echo "${{ inputs.TASK }}"
+
       # otel-metric-aggregation/src/test
       # 0: otel-metric-aggregation, 1: src, 2: test
       - uses: jungwinter/split@master
