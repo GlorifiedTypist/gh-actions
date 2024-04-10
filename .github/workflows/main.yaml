@@ -18,7 +18,7 @@ concurrency:
     cancel-in-progress: false
 
 jobs:
-  changes:
+  evaluate-changes:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
@@ -48,7 +48,7 @@ jobs:
           cat $GITHUB_OUTPUT
 
       - run: |
-          echo ${{ needs.changes.outputs.docker }}
+          echo ${{ needs.evaluate-changes.outputs.docker }}
 
     # secret-scanning:
     #     name: Secret Scan
@@ -66,13 +66,13 @@ jobs:
 
   deploy:
     # if: ${{ github.ref == 'refs/heads/dev' }}
-    if: ${{ needs.changes.outputs.docker == 'true' }}
-    needs: changes
+    if: ${{ needs.evaluate-changes.outputs.docker == 'true' }}
+    needs: evaluate-changes
     uses: ./.github/workflows/fargate.yaml
     secrets: inherit
     strategy:
       matrix:
-        task: ${{fromJSON(needs.changes.outputs.docker-matrix)}}
+        task: ${{fromJSON(needs.evaluate-changes.outputs.docker-matrix)}}
     with:
         ECR_REGISTRY: ghecr
         ECR_REPOSITORY: test
