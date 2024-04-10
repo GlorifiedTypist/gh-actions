@@ -51,11 +51,11 @@ jobs:
 
       - id: docker-matrix
         run: |
-          echo "${{ steps.docker-changed-dirs.outputs.all_changed_files }}"
           echo "${{ steps.docker-changed-dirs.outputs.all_changed_files }}" | sed 's/docker\///g' | sed 's/ /", "/g' | sed 's/.*/value=["&"]/' >> $GITHUB_OUTPUT
+          echo $GITHUB_OUTPUT
 
       - run: |
-          echo "${{ needs.changes.outputs.docker }}"
+          echo ${{ needs.changes.outputs.docker }}
 
     # secret-scanning:
     #     name: Secret Scan
