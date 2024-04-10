@@ -23,7 +23,7 @@ jobs:
     permissions:
       pull-requests: read
     outputs:
-      docker: ${{ steps.docker-changed-dirs.outputs.all_changed_files }}
+      docker: ${{ steps.docker-changed-dirs.outputs.any_changed }}
       docker-matrix: ${{ steps.docker-matrix.outputs.value }}
 
     environment:
