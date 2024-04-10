@@ -23,7 +23,7 @@ jobs:
     permissions:
       pull-requests: read
     outputs:
-      docker: ${{ steps.filter.outputs.docker }}
+      docker: ${{ steps.docker-changed-dirs.outputs.all_changed_files }}
       docker-matrix: ${{ steps.docker-matrix.outputs.value }}
 
     environment:
@@ -35,13 +35,6 @@ jobs:
           echo "Environment name: $env"
 
       - uses: actions/checkout@v4
-
-      - uses: dorny/paths-filter@v3
-        id: filter
-        with:
-          filters: |
-            docker:
-              - 'docker/**'
 
       - uses: tj-actions/changed-files@v44
         id: docker-changed-dirs
