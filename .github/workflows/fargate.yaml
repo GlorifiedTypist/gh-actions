@@ -46,7 +46,7 @@ jobs:
 
       # otel-metric-aggregation/src/test
       # 0: otel-metric-aggregation, 1: src, 2: test
-      - uses: jungwinter/split@master
+      - uses: winterjung/split@v2
         id: deploymet_info
         with:
           msg: ${{ inputs.TASK }}
