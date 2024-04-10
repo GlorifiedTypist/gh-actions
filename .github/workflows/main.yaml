@@ -52,7 +52,7 @@ jobs:
       - id: docker-matrix
         run: |
           echo "${{ steps.docker-changed-dirs.outputs.all_changed_files }}" | sed 's/docker\///g' | sed 's/ /", "/g' | sed 's/.*/value=["&"]/' >> $GITHUB_OUTPUT
-          echo $GITHUB_OUTPUT
+          cat $GITHUB_OUTPUT
 
       - run: |
           echo ${{ needs.changes.outputs.docker }}
