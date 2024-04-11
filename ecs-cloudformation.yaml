@@ -135,7 +135,7 @@ Resources:
       TaskRoleArn: !GetAtt [ECRAccessRole, Arn]
       ContainerDefinitions:
         - Name: hello-container
-          Image: !Sub "${AWS::AccountId}.dkr.ecr.us-east-1.amazonaws.com/hello:latest"
+          Image: !Sub "${AWS::AccountId}.dkr.ecr.us-east-1.amazonaws.com/hello:1f83ad60749c5b03b63449574168baaf6cf19026"
           Essential: true
           PortMappings:
             - ContainerPort: 80
@@ -166,7 +166,7 @@ Resources:
       TaskRoleArn: !GetAtt [ECRAccessRole, Arn]
       ContainerDefinitions:
         - Name: test-container
-          Image: !Sub "${AWS::AccountId}.dkr.ecr.us-east-1.amazonaws.com/test:latest"
+          Image: !Sub "${AWS::AccountId}.dkr.ecr.us-east-1.amazonaws.com/test:1f83ad60749c5b03b63449574168baaf6cf19026"
           Essential: true
           PortMappings:
             - ContainerPort: 80

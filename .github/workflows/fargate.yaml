@@ -63,13 +63,22 @@ jobs:
           dir_names: "true"
           files: docker/**
 
-      - name: Download task definition
-        run: |
-            aws ecs describe-task-definition --task-definition ${{ steps.deploymet_info.outputs._2 }} --query taskDefinition > task-definition.json
+      # - name: Download task definition
+      #   run: |
+      #       aws ecs describe-task-definition --task-definition ${{ steps.deploymet_info.outputs._2 }} --query taskDefinition > task-definition.json
+
+      - name: Update environment
+        uses: richardrigutins/replace-in-files@v2
+        with:
+          files: 'docker/**/Dockerfile'
+          search-text: '${env}'
+          replacement-text: 'dev'
+          encoding: 'utf8'
+          max-parallelism: 10
 
       - run: |
-          pwd
-          ls
+          cat docker/otel-metric-aggregation/src/hello/Dockerfile
+          cat docker/otel-metric-aggregation/src/test/Dockerfile
 
       - name: Build and push
         uses: docker/build-push-action@v5
