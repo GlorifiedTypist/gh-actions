@@ -62,7 +62,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          echo "hello"
+          echo "hello - hi"
 
   deploy:
     # if: ${{ github.ref == 'refs/heads/dev' }}
