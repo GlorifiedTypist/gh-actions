@@ -27,7 +27,7 @@ jobs:
       docker-matrix: ${{ steps.docker-matrix.outputs.value }}
 
     environment:
-     name: dev
+      name: prod
 
     steps:
       - run: |
