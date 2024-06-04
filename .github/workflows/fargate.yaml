@@ -30,6 +30,7 @@ permissions:
 jobs:
   deploy:
     runs-on: self-hosted
+    environment: prod
     steps:
       # - run: echo ${{ inputs.TASK }}
       - name: Checkout the repository
