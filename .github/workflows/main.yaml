@@ -29,6 +29,9 @@ jobs:
     environment:
       name: prod
 
+    env:
+      env: ${{ vars.ENV }}
+
     steps:
       - run: |
           env
@@ -80,6 +83,9 @@ jobs:
         CLUSTER_NAME: ghecr-ECSFargateCluster-hcCeInCKWmcR
         TASK_DEFINITION: fargate-task
         TASK: ${{ matrix.task }}
+        VARS: 
+        # GH_ENV: ${{ env.}}
+        # GH_SECRET: 
 
     # validate:
     #     if: ${{ github.ref != 'refs/heads/main' }}

@@ -22,6 +22,15 @@ on:
       TASK:
         required: true
         type: string
+      # GH_ENV:
+      #   required: true
+      #   type: string
+      # GH_SECRET:
+      #   required: true
+      #   type: string
+      VARS:
+        required: true
+        type: string
 
 permissions:
   id-token: write
@@ -32,6 +41,9 @@ jobs:
     runs-on: self-hosted
     environment: deploy
     steps:
+      - run: echo ${{ inputs.VARS }}
+      - run: echo ${{ inputs.GH_ENV }}
+      - run: echo ${{ inputs.GH_SECRET }}
       # - run: echo ${{ inputs.TASK }}
       - name: Checkout the repository
         uses: actions/checkout@v4
