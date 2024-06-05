@@ -35,7 +35,7 @@ jobs:
     steps:
       - run: |
           echo "Environment name: $env"
-          echo "${{ vars.ENV }}"
+          echo "${{ secrets.GH_SECRET }}"
 
       - uses: actions/checkout@v4
 
