@@ -30,7 +30,7 @@ jobs:
       name: prod
 
     env:
-      env: ${{ vars.ENV }}
+      env: ${{ vars.gh_ENV }}
 
     steps:
       - run: |
