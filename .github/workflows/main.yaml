@@ -83,7 +83,7 @@ jobs:
         CLUSTER_NAME: ghecr-ECSFargateCluster-hcCeInCKWmcR
         TASK_DEFINITION: fargate-task
         TASK: ${{ matrix.task }}
-        VARS: 
+        VARS: ${{ vars.ENV }}
         # GH_ENV: ${{ env.}}
         # GH_SECRET: 
 
