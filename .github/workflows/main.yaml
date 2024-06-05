@@ -34,24 +34,24 @@ jobs:
 
     steps:
       - run: |
-          env
           echo "Environment name: $env"
+          echo "${{ vars.ENV }}"
 
       - uses: actions/checkout@v4
 
-      - uses: tj-actions/changed-files@v44
-        id: docker-changed-dirs
-        with:
-          dir_names: "true"
-          files: docker/**/src/**
+      # - uses: tj-actions/changed-files@v44
+      #   id: docker-changed-dirs
+      #   with:
+      #     dir_names: "true"
+      #     files: docker/**/src/**
 
-      - id: docker-matrix
-        run: |
-          echo "${{ steps.docker-changed-dirs.outputs.all_changed_files }}" | sed 's/docker\///g' | sed 's/ /", "/g' | sed 's/.*/value=["&"]/' >> $GITHUB_OUTPUT
-          cat $GITHUB_OUTPUT
+      # - id: docker-matrix
+      #   run: |
+      #     echo "${{ steps.docker-changed-dirs.outputs.all_changed_files }}" | sed 's/docker\///g' | sed 's/ /", "/g' | sed 's/.*/value=["&"]/' >> $GITHUB_OUTPUT
+      #     cat $GITHUB_OUTPUT
 
-      - run: |
-          echo ${{ needs.evaluate-changes.outputs.docker }}
+      # - run: |
+      #     echo ${{ needs.evaluate-changes.outputs.docker }}
 
     # secret-scanning:
     #     name: Secret Scan
@@ -61,31 +61,31 @@ jobs:
     #     name: Linting
     #     uses: ./.github/workflows/linting.yaml
 
-  dummy:
-    runs-on: ubuntu-latest
-    steps:
-      - run: |
-          echo "hello - hi"
+  # dummy:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - run: |
+  #         echo "hello - hi"
 
-  deploy:
-    # if: ${{ github.ref == 'refs/heads/dev' }}
-    if: ${{ needs.evaluate-changes.outputs.docker == 'true' }}
-    needs: evaluate-changes
-    uses: ./.github/workflows/fargate.yaml
-    secrets: inherit
-    strategy:
-      matrix:
-        task: ${{fromJSON(needs.evaluate-changes.outputs.docker-matrix)}}
-    with:
-        ECR_REGISTRY: ghecr
-        ECR_REPOSITORY: test
-        ACCOUNT_ID: 525524992861
-        CLUSTER_NAME: ghecr-ECSFargateCluster-hcCeInCKWmcR
-        TASK_DEFINITION: fargate-task
-        TASK: ${{ matrix.task }}
-        VARS: ${{ vars.ENV }}
-        # GH_ENV: ${{ env.}}
-        # GH_SECRET: 
+  # deploy:
+  #   # if: ${{ github.ref == 'refs/heads/dev' }}
+  #   if: ${{ needs.evaluate-changes.outputs.docker == 'true' }}
+  #   needs: evaluate-changes
+  #   uses: ./.github/workflows/fargate.yaml
+  #   secrets: inherit
+  #   strategy:
+  #     matrix:
+  #       task: ${{fromJSON(needs.evaluate-changes.outputs.docker-matrix)}}
+  #   with:
+  #       ECR_REGISTRY: ghecr
+  #       ECR_REPOSITORY: test
+  #       ACCOUNT_ID: 525524992861
+  #       CLUSTER_NAME: ghecr-ECSFargateCluster-hcCeInCKWmcR
+  #       TASK_DEFINITION: fargate-task
+  #       TASK: ${{ matrix.task }}
+  #       VARS: ${{ vars.ENV }}
+  #       # GH_ENV: ${{ env.}}
+  #       # GH_SECRET: 
 
     # validate:
     #     if: ${{ github.ref != 'refs/heads/main' }}
