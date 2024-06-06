@@ -7,6 +7,9 @@ on:
       ECR_REGISTRY:
         required: true
         type: string
+      TEST:
+        required: true
+        type: string
     # secrets:
     #   ROLE_ARN:
     #     required: true
@@ -23,7 +26,7 @@ jobs:
       name: deploy
     steps:
       - run: |
-          echo "Secret: ${{ secrets }}"
+          echo "Secret: ${{ inputs.TEST }}"
           echo "Secret: ${{ secrets.GH_SECRET }}"
 
 
