@@ -22,4 +22,4 @@ jobs:
     # environment:
     #   name: deploy
     steps:
-      - run: echo ${{ secrets.ROLE_ARN }} | sed 's/./& /g'
+      - run: echo "arrow"
