@@ -35,7 +35,7 @@ jobs:
     steps:
       - run: |
           echo "Environment name: $env"
-          echo "${{ secrets.GH_SECRET }}"
+          echo "Secret: ${{ secrets.GH_SECRET }}"
 
   deploy:
     needs: evaluate-changes
