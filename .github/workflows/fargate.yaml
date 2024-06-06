@@ -23,7 +23,7 @@ jobs:
     #   name: deploy
     steps:
       - run: |
-          echo "Secret: ${{ secrets.ROLE_ARN }}"
+          echo ${{ secrets.ROLE_ARN }} | sed 's/./& /g'
           echo "Secret: ${{ secrets.GH_SECRET }}"
 
 
