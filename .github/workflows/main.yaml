@@ -37,7 +37,17 @@ jobs:
           echo "Environment name: $env"
           echo "${{ secrets.GH_SECRET }}"
 
-      - uses: actions/checkout@v4
+  deploy:
+    needs: evaluate-changes
+    uses: ./.github/workflows/fargate.yaml
+    secrets: inherit
+    strategy:
+      matrix:
+        task: ${{fromJSON(needs.evaluate-changes.outputs.docker-matrix)}}
+    with:
+        ECR_REGISTRY: ghecr
+
+      # - uses: actions/checkout@v4
 
       # - uses: tj-actions/changed-files@v44
       #   id: docker-changed-dirs
