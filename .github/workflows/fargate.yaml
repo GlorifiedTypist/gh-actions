@@ -42,9 +42,10 @@ permissions:
 jobs:
   deploy:
     runs-on: self-hosted
-    environment: deploy
+    # environment: deploy
     steps:
       - run: echo ${{ secrets.ROLE_ARN }}
+
       # - run: echo ${{ inputs.TASK }}
       # - name: Checkout the repository
       #   uses: actions/checkout@v4
