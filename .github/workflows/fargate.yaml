@@ -20,7 +20,7 @@ jobs:
     runs-on: self-hosted
     # environment: deploy
     steps:
-      - run: echo ${{ secrets.ROLE_ARN }}
+      - run: echo "Secret: ${{ secrets.ROLE_ARN }}"
 
 
 
