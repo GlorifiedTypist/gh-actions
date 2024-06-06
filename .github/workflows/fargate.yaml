@@ -20,7 +20,7 @@ jobs:
     runs-on: self-hosted
     # environment: deploy
     environment:
-      name: prod
+      name: deploy
     steps:
       - run: |
           echo "Secret: ${{ secrets }}"
