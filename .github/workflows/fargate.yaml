@@ -10,30 +10,6 @@ on:
     secrets:
       ROLE_ARN:
         required: true
-      # ECR_REPOSITORY:
-      #   required: true
-      #   type: string
-      # ACCOUNT_ID:
-      #   required: true
-      #   type: string
-      # CLUSTER_NAME:
-      #   required: true
-      #   type: string
-      # TASK_DEFINITION:
-      #   required: true
-      #   type: string
-      # TASK:
-      #   required: true
-      #   type: string
-      # GH_ENV:
-      #   required: true
-      #   type: string
-      # GH_SECRET:
-      #   required: true
-      #   type: string
-      # VARS:
-      #   required: true
-      #   type: string
 
 permissions:
   id-token: write
@@ -45,6 +21,27 @@ jobs:
     # environment: deploy
     steps:
       - run: echo ${{ secrets.ROLE_ARN }}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
       # - run: echo ${{ inputs.TASK }}
       # - name: Checkout the repository

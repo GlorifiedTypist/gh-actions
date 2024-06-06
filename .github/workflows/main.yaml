@@ -5,10 +5,6 @@ on:
     workflow_dispatch:
     push:
 
-# env:
-#   ECR_REGISTRY: ghecr
-#   ECR_REPOSITORY: test
-
 permissions:
     contents: write
     id-token: write
@@ -40,13 +36,28 @@ jobs:
   deploy:
     needs: evaluate-changes
     uses: ./.github/workflows/fargate.yaml
-    secrets:
-      ROLE_ARN: ${{ secrets.GH_SECRET }}
+    secrets: inherit
     # strategy:
     #   matrix:
     #     task: ${{fromJSON(needs.evaluate-changes.outputs.docker-matrix)}}
     with:
         ECR_REGISTRY: ghecr
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
       # - uses: actions/checkout@v4
