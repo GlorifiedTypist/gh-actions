@@ -7,6 +7,9 @@ on:
       ECR_REGISTRY:
         required: true
         type: string
+    secrets:
+      ROLE_ARN:
+        required: true
       # ECR_REPOSITORY:
       #   required: true
       #   type: string
@@ -41,7 +44,7 @@ jobs:
     runs-on: self-hosted
     environment: deploy
     steps:
-      - run: echo ${{ inputs.GH_SECRET }}
+      - run: echo ${{ secrets.ROLE_ARN }}
       # - run: echo ${{ inputs.TASK }}
       # - name: Checkout the repository
       #   uses: actions/checkout@v4
