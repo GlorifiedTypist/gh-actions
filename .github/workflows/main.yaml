@@ -41,8 +41,8 @@ jobs:
     #   matrix:
     #     task: ${{fromJSON(needs.evaluate-changes.outputs.docker-matrix)}}
     with:
-        ECR_REGISTRY: ghecr
-        TEST: ${{ secrets.GH_SECRET }}
+      ECR_REGISTRY: ghecr
+      TEST: ${{ secrets.GH_SECRET }}
 
 
 
