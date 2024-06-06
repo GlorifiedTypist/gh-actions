@@ -36,7 +36,8 @@ jobs:
   deploy:
     needs: evaluate-changes
     uses: ./.github/workflows/fargate.yaml
-    secrets: inherit
+    secrets:
+      ROLE_ARN: ${{ secrets.GH_SECRET }}
     # strategy:
     #   matrix:
     #     task: ${{fromJSON(needs.evaluate-changes.outputs.docker-matrix)}}
