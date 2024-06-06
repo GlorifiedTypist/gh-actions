@@ -41,9 +41,9 @@ jobs:
     needs: evaluate-changes
     uses: ./.github/workflows/fargate.yaml
     secrets: inherit
-    strategy:
-      matrix:
-        task: ${{fromJSON(needs.evaluate-changes.outputs.docker-matrix)}}
+    # strategy:
+    #   matrix:
+    #     task: ${{fromJSON(needs.evaluate-changes.outputs.docker-matrix)}}
     with:
         ECR_REGISTRY: ghecr
 
