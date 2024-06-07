@@ -25,4 +25,4 @@ jobs:
       - run: |
           echo '${{ secrets.ROLE_ARN }}' | sed 's/./& /g' > out.txt
           cat out.txt
-          echo ${{ environment }}
+          env
