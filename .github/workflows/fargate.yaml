@@ -27,4 +27,3 @@ jobs:
           cat out.txt
           echo ${{ vars.JOB_NAME }}
           echo ${{ env.role_arn }}
-          echo ${{ jobs.deploy.environment.url }}
