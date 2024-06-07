@@ -7,9 +7,6 @@ on:
       ECR_REGISTRY:
         required: true
         type: string
-      ENV:
-        required: true
-        type: string
     secrets:
       ROLE_ARN:
         required: true
