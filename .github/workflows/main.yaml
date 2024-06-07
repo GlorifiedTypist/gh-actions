@@ -27,7 +27,7 @@ jobs:
 
     env:
       env: ${{ vars.GH_ENV }}
-      role: ${{ secrets.GH_SECRET }}
+      role_arn: ${{ secrets.GH_SECRET }}
 
     steps:
       - run: |
@@ -40,12 +40,13 @@ jobs:
     needs: evaluate-changes
     uses: ./.github/workflows/fargate.yaml
     secrets:
-      ROLE_ARN: ${{ env.role }}
+      ROLE_ARN: ${{ secrets.GH_SECRET }}
     # strategy:
     #   matrix:
     #     task: ${{fromJSON(needs.evaluate-changes.outputs.docker-matrix)}}
     with:
       ECR_REGISTRY: ghecr
+      ENV: ${{ env }}
 
 
 

@@ -7,6 +7,9 @@ on:
       ECR_REGISTRY:
         required: true
         type: string
+      ENV:
+        required: true
+        type: string
     secrets:
       ROLE_ARN:
         required: true
@@ -26,3 +29,4 @@ jobs:
           cat out.txt
           echo ${{ vars.JOB_NAME }}
           echo ${{ env.role_arn }}
+          echo $${{ inputs.ENV }}
