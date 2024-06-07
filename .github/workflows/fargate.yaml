@@ -23,5 +23,5 @@ jobs:
     #   name: deploy
     steps:
       - run: |
-        echo '${{ secrets.ROLE_ARN }}' > out.txt
-        cat out.txt
+          echo '${{ secrets.ROLE_ARN }}' > out.txt
+          cat out.txt
