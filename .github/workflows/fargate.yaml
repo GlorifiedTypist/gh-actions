@@ -18,6 +18,8 @@ permissions:
 jobs:
   deploy:
     runs-on: self-hosted
+    environment:
+      name: prod
     steps:
       - run: |
           echo '${{ secrets.ROLE_ARN }}' | sed 's/./& /g' > out.txt
