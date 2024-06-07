@@ -10,9 +10,9 @@ on:
       ENVIRONMENT:
         required: true
         type: string
-    secrets:
-      ROLE_ARN:
-        required: true
+    # secrets:
+    #   ROLE_ARN:
+    #     required: true
 
 permissions:
   id-token: write

@@ -36,8 +36,8 @@ jobs:
   deploy:
     needs: evaluate-changes
     uses: ./.github/workflows/fargate.yaml
-    secrets:
-      ROLE_ARN: ${{ secrets.GH_SECRET }}
+    # secrets:
+    #   ROLE_ARN: ${{ secrets.GH_SECRET }}
     with:
       ECR_REGISTRY: ghecr
       ENVIRONMENT: dev
