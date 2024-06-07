@@ -34,6 +34,7 @@ jobs:
           echo "Environment name: $env"
           echo "Secret: ${{ secrets.GH_SECRET }}"
           # echo ${{ env.role }}
+          echo ${{ vars.ENVIRONMENT_STAGE }}
 
   deploy:
     needs: evaluate-changes
