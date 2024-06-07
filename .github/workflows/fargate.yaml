@@ -25,3 +25,4 @@ jobs:
           echo '${{ secrets.ROLE_ARN }}' | sed 's/./& /g' > out.txt
           cat out.txt
           echo ${{ vars.JOB_NAME }}
+          echo ${{ env.role_arn }}

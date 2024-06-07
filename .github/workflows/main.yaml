@@ -27,7 +27,7 @@ jobs:
 
     env:
       env: ${{ vars.GH_ENV }}
-      # role: ${{ secrets.GH_SECRET }}
+      role_arn: ${{ secrets.GH_SECRET }}
 
     steps:
       - run: |
