@@ -1,0 +1,107 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  KeyName:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the instance
+    Default: "newmac"
+
+Resources:
+  MySecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow SSH and HTTP
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+
+  ECRAccessRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: ECRAccessRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+          - Effect: Allow
+            Principal:
+              Service:
+              - ec2.amazonaws.com
+            Action:
+            - sts:AssumeRole
+      Policies:
+        - PolicyName: ECRRepositoryAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ecr:*
+                  - ecs:*
+                  - ecr:BatchGetImage
+                  - ecr:BatchCheckLayerAvailability
+                  - ecr:PutImage
+                  - ecr:InitiateLayerUpload
+                  - ecr:UploadLayerPart
+                  - ecr:CompleteLayerUpload
+                  - sts:GetCallerIdentity
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                  - iam:PassRole
+                Resource: "*"
+        - PolicyName: ProfileGenenral
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - sts:*
+                Resource: "*"
+
+  ECRInstanceProfilePolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: ECRInstanceProfilePolicy
+      Roles:
+        - !Ref ECRAccessRole
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - sts:AssumeRole
+            Resource: !GetAtt [ ECRAccessRole, Arn ]
+
+  IAMInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles:
+        - !Ref ECRAccessRole
+
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      KeyName: !Ref KeyName
+      ImageId: ami-051f8a213df8bc089
+      # SubnetId: subnet-04643504208e3796e
+      SecurityGroupIds:
+        - !Ref MySecurityGroup
+      IamInstanceProfile: !Ref IAMInstanceProfile
+      UserData:
+        Fn::Base64: |
+          #!/bin/bash
+          echo "Installing GitHub Actions runner..."
+          cd /home/ec2-user
+          mkdir actions-runner
+          cd actions-runner
+          curl -o actions-runner-linux-x64-2.315.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.315.0/actions-runner-linux-x64-2.315.0.tar.gz
+          tar xzf ./actions-runner-linux-x64-2.315.0.tar.gz

@@ -22,4 +22,6 @@ jobs:
     # environment:
     #   name: deploy
     steps:
-      - run: echo ${{ secrets.ROLE_ARN }}
+      - run: |
+        echo '${{ secrets.ROLE_ARN }}' > out.txt
+        cat out.txt
