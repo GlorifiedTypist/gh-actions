@@ -36,6 +36,7 @@ jobs:
   deploy:
     needs: evaluate-changes
     uses: ./.github/workflows/fargate.yaml
+    secrets: inherit
     # secrets:
     #   ROLE_ARN: ${{ secrets.GH_SECRET }}
     with:
